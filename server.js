@@ -22,21 +22,26 @@ http.createServer(function(req, res){
 	var parsed_qs = url.parse(req.url, true).query;
 	var user_agent = req.headers['user-agent'];
 	
-	// TODO Use this to strip bad parsed_qs keys
-	var clean_qs_keys = ['err_msg', 'err_file', 'err_line', 'msg', 'msg_type'];
-	
-	// Fix known field types
-	if(parsed_qs.err_line){
-		parsed_qs.err_line = parseInt(parsed_qs.err_line, 10);
+	// If this is a legitimate request
+	if(parsed_qs.msg_type){
+		
+		// TODO Use this to strip bad parsed_qs keys
+		var clean_qs_keys = ['err_msg', 'err_file', 'err_line', 'msg', 'msg_type'];
+		
+		// Fix known field types
+		if(parsed_qs.err_line){
+			parsed_qs.err_line = parseInt(parsed_qs.err_line, 10);
+		}
+		
+		// Create the document to insert
+		var insert_doc = parsed_qs;
+		insert_doc.time = parsed_qs.time || new Date();
+		insert_doc.user_agent = user_agent;
+		
+		// Insert the document
+		messages_db.insert(insert_doc);
+		
 	}
-	
-	// Create the document to insert
-	var insert_doc = parsed_qs;
-	insert_doc.time = parsed_qs.time || new Date();
-	insert_doc.user_agent = user_agent;
-	
-	// Insert the document
-	messages_db.insert(insert_doc);
 	
 	// Return an empty gif
 	var empty_gif = new Buffer(35);

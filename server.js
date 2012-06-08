@@ -49,7 +49,7 @@ http.createServer(function(req, res){
 	res.writeHead(200, {'Content-Type' : 'image/gif'});
 	res.end(empty_gif);
 	
-}).listen(6543, '127.0.0.1');
+}).listen(6544, '127.0.0.1');
 
 console.log('[' + (new Date()) + '] Running. Waiting for requests.');
 
